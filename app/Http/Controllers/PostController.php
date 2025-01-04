@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    function index() {
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
         // Eloquent ORM -> Get all data
         $data = Post::paginate(10);
 
@@ -15,26 +19,52 @@ class PostController extends Controller
         return view('post.index', ['posts' => $data, "pageTitle" => "Blog"]);
     }
 
-    function show($id) {
-        $post = Post::find($id);
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('post.create', ["pageTitle" => "Blog - Create New Post"]);
+    }
 
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        // @TODO: this will be completed in the Forms section
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $post = Post::find($id);
         return view('post.show', ['post' => $post, "pageTitle" => $post->title]);
     }
 
-    function create() {
-        // $post = Post::create([
-        //     'title' => 'My Find Unique post 1',
-        //     'body' => 'This is to test find',
-        //     'author' => 'Yahya',
-        //     'published' => true
-        // ]);
-        
-        Post::factory(1000)->create();
-
-        return redirect('/blog');
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        return view('post.edit', ["pageTitle" => "Blog - Edit Post"]);
     }
 
-    function delete() {
-        Post::destroy(13);
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        // @TODO: this will be completed in the Forms section
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        // @TODO: this will be completed in the Forms section
     }
 }

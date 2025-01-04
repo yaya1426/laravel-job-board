@@ -2,47 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class TagController extends Controller
 {
-    function index() {
-        // Eloquent ORM -> Get all data
-        $data = Tag::all();
-
-        // Pass the data to the view
-        return view('tag.index', ['tags' => $data, "pageTitle" => "Tags"]);
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $tags = Tag::paginate(10);
+        return view('tag.index', ['tags' => $tags, 'pageTitle' => 'Tags']);
     }
 
-    function create() {
-        Tag::create([
-            'title' => 'CSS',
-        ]);
-
-        return redirect('/tags');
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('tag.create', ['pageTitle' => 'Create New Tag']);
     }
 
-    function testManyToMany() {
-        // $post15 = Post::find(15);
-        // $post17 = Post::find(17);
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        // @TODO: this will be completed in the Forms section
+    }
 
-        // $post15->tags()->attach([1, 2]);
-        // $post17->tags()->attach([1]);
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $tag = Tag::find($id);
+        return view('tag.show', ['tag' => $tag, 'pageTitle' => 'View Tag']);
+    }
 
-        // return response()->json(([
-        //     'post15' => $post15->tags,
-        //     'post17' => $post17->tags
-        // ]));
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $tag = Tag::find($id);
+        return view('tag.edit', ['tag' => $tag, 'pageTitle' => 'Edit Tag']);
+    }
 
-        $tag = Tag::find(2);
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        // @TODO: this will be completed in the Forms section
+    }
 
-        $tag->posts()->attach([17]);
-
-        return response()->json(([
-            'tag' => $tag->title,
-            'posts' => $tag->posts
-        ]));
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        // @TODO: this will be completed in the Forms section
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -12,8 +14,7 @@ class CommentController extends Controller
      */
     public function index()
     {
-        $comments = Comment::paginate(10);
-        return view('comment.index', ['comments' => $comments, 'pageTitle' => 'Comments']);
+        return redirect('/blog');
     }
 
     /**
@@ -21,15 +22,26 @@ class CommentController extends Controller
      */
     public function create()
     {
-        return view('comment.create', ['pageTitle' => 'Create New Comment']);
+        return redirect('/blog');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        // @TODO: this will be completed in the Forms section
+    public function store(CommentRequest $request)
+    {        
+        $post = Post::findOrFail($request->input('post_id'));
+
+        $comment = new Comment();
+
+        $comment->author = $request->input('author');
+        $comment->content = $request->input('content');
+        $comment->post_id = $request->input('post_id');
+
+        $comment->save();
+
+        // Redirect to the post's page with a success message
+        return redirect("/blog/{$post->id}")->with('success', 'Comment added successfully!');
     }
 
     /**
@@ -37,8 +49,7 @@ class CommentController extends Controller
      */
     public function show(string $id)
     {
-        $comment = Comment::find($id);
-        return view('comment.show', ['comment' => $comment, 'pageTitle' => 'View Comment']);
+        return redirect(to: '/blog');
     }
 
     /**
@@ -46,8 +57,7 @@ class CommentController extends Controller
      */
     public function edit(string $id)
     {
-        $comment = Comment::find($id);
-        return view('comment.edit', ['comment' => $comment, 'pageTitle' => 'Edit Comment']);
+        // @TODO: not really required, but a nice addition if you want to do it. :D
     }
 
     /**
@@ -55,7 +65,7 @@ class CommentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // @TODO: this will be completed in the Forms section
+        // @TODO: not really required, but a nice addition if you want to do it. :D
     }
 
     /**
@@ -63,6 +73,6 @@ class CommentController extends Controller
      */
     public function destroy(string $id)
     {
-        // @TODO: this will be completed in the Forms section
+        // @TODO: not really required, but a nice addition if you want to do it. :D
     }
 }

@@ -27,11 +27,32 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // ## Protected Routes
-Route::middleware('auth')->group(function() {
-    Route::resource('blog', PostController::class);
-    Route::resource('comments', CommentController::class);
+Route::middleware('auth')->group(function () {
+    // Admin
+    Route::middleware('role:admin')->group(function () {
+        Route::delete('/blog/{post}', [PostController::class, 'destroy']);
+    });
+
+    // Editor, Admin
+    Route::middleware('role:editor,admin')->group(function () {
+        Route::get('/blog/create', [PostController::class, 'create']);
+        Route::post('/blog', [PostController::class, 'store']);
+
+        Route::middleware('can:update,post')->group(function () {
+            Route::get('/blog/{post}/edit', [PostController::class, 'edit']);
+            Route::patch('/blog/{post}', [PostController::class, 'update']);
+        });
+
+    });
+
+    // Viewer, Editor, Admin
+    Route::middleware('role:viewer,editor,admin')->group(function () {
+        Route::get('/blog', [PostController::class, 'index']);
+        Route::get('/blog/{post}', [PostController::class, 'show']);
+        Route::resource('comments', CommentController::class);
+    });
 });
 
-Route::middleware('onlyMe')->group(function() {
+Route::middleware('onlyMe')->group(function () {
     Route::get('/about', AboutController::class);
 });

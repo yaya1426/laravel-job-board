@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\OnlyMe;
+use App\Http\Middleware\RoleMiddlware;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -15,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->alias(['onlyMe' => OnlyMe::class]);
+        $middleware->alias(['onlyMe' => OnlyMe::class, 'role' => RoleMiddlware::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         // Handle 401 errors for API routes
